@@ -1,6 +1,15 @@
+import os
+
 # 将文件中获取到的所有单词写入文件中
 def write_words(word_dict, write_file):
-    with open(write_file, 'w') as f:
+    exists = os.path.exists('result')
+    print(exists)
+
+    if not exists :
+        mkdir = os.mkdir('result')
+        print(mkdir)
+    out_file = 'result/{}'.format(write_file)
+    with open(out_file, 'w') as f:
         for word, count in word_dict.items():
             f.write(word)
             f.write('\n')
@@ -37,8 +46,14 @@ def _find_continuity(line):
 
 
 def main(read_file, write_file):
-    with open(read_file) as f:
-        f = open(read_file)
+    exists = os.path.isdir('store')
+    if not exists:
+        print('not find dir : store')
+        return
+
+    store_file = 'store/{}'.format(read_file)
+
+    with open(store_file) as f:
         line = f.readline()
 
         word_dict = {}
