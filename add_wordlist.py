@@ -1,4 +1,3 @@
-
 import requests
 import time
 import config
@@ -7,37 +6,39 @@ import config
 # url 一般是 https://www.shanbay.com/api/v1/wordlist/vocabulary/
 url = config.url
 cookie = config.cookie
+id = config.id
 
 def main():
-    with open('out_file') as f:
+    with open('result/out_file') as f:
         word = f.readline()
         while word:
-            word = f.readline()
             replaced = word.replace('\n', '')
             print(replaced)
-            time.sleep(2)
-            add_wordlist(word)
-    pass
+            time.sleep(0.3)
+            add_wordlist(id,replaced)
+            word = f.readline()
+pass
 
-def add_wordlist(word):
+
+def add_wordlist(id,word):
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) '
-                      'Chrome/61.0.3163.100 '
-                      'Safari/537.36',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'zh-CN,zh;q=0.8,ko;q=0.6',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Host': 'www.shanbay.com',
+        'Origin': 'https://www.shanbay.com',
+        'Referer': 'https://www.shanbay.com/wordlist/195865/585211/',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Mobile Safari/537.36',
+        'X-Requested-With': 'XMLHttpRequest',
         'Cookie': cookie
     }
 
-    print(headers)
-
-    data = {
-        'id': 585211,
-        'word': word
-    }
+    data = 'id={}&word={}'.format(id,word)
     r = requests.post(url, headers=headers, data=data)
+
     print(r.content)
-    pass
-    pass
 
 
 

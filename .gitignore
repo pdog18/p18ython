@@ -3,3 +3,4 @@
 config
 /result
 /store
+__pycache__
