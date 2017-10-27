@@ -1,15 +1,18 @@
 import os
 
+write_file = 'out_file'
+
+
 # 将文件中获取到的所有单词写入文件中
-def write_words(word_dict, write_file):
+def write_words(word_dict):
     exists = os.path.exists('result')
     print(exists)
 
-    if not exists :
+    if not exists:
         mkdir = os.mkdir('result')
         print(mkdir)
     out_file = 'result/{}'.format(write_file)
-    with open(out_file, 'w') as f:
+    with open(out_file, 'a') as f:
         for word, count in word_dict.items():
             f.write(word)
             f.write('\n')
@@ -45,15 +48,8 @@ def _find_continuity(line):
     pass
 
 
-def main(read_file, write_file):
-    exists = os.path.isdir('store')
-    if not exists:
-        print('not find dir : store')
-        return
-
-    store_file = 'store/{}'.format(read_file)
-
-    with open(store_file) as f:
+def get_word(file):
+    with open(file) as f:
         line = f.readline()
 
         word_dict = {}
@@ -70,9 +66,39 @@ def main(read_file, write_file):
 
         print(word_dict)
         print(len(word_dict))
-        write_words(word_dict, write_file)
+        write_words(word_dict)
         pass
+    pass
+
+
+def main(path):
+    store = os.listdir(path)
+
+    for f in store:
+        full_path = path + '/{}'.format(f)
+        isfile = os.path.isfile(full_path)
+        isdir = os.path.isdir(full_path)
+        if isfile:
+            get_word(full_path)
+        elif isdir:
+            temp_path = (path + '/{}').format(f)
+            main(temp_path)
+            pass
+        else:
+            print('什么也不是')
+
+    print(store)
+
+
+    # file = store
+    # get_word(file)
 
 
 if __name__ == '__main__':
-    main('activity', 'out_file')
+
+    exists = os.path.isdir('store')
+
+    if not exists:
+        raise ('not find dir : store')
+
+    main('store')
