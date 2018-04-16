@@ -9,7 +9,7 @@ def get_img_url_for_entity(index_url):
     r = session.get(index_url)
     js_list = r.html.find('script')
 
-    result = ((js_list[0].full_text).split('&#13')[-1])
+    result = js_list[0].full_text.split('&#13')[-1]
     base_array = result.split('picAy')
 
     img_url_list = []

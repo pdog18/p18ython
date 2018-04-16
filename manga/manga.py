@@ -21,10 +21,7 @@ if __name__ == '__main__':
     for entity in results:
         img_urls = get_img_url_for_entity(entity.url)
 
-        #遍历图片集合，下载并保存到文件夹中。
+        # 遍历图片集合，下载并保存到文件夹中。
         for img in img_urls:
-            try:
-                download_image(entity.stage, img)
-            except:
-                print("第{}回，错误了".format(entity.stage))
+            download_image(entity.stage, img)
 
