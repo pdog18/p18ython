@@ -1,37 +1,30 @@
-import os
-import requests
-from PIL import Image
-from io import BytesIO
+from download_img import download_image
+from get_img_array import get_img_url_for_entity
+from get_stages import stage_catch
+from util import get_number
 
 
-# 这个方法是 用来下载图片的
-# stage 是第几回
-# save_path 是保存的路径
-def download_image(stage, save_path='./outputs'):
-    #todo 根据stage 获得 当前回总共有几页
-    pages = 20
-    print("start download pages is : {} , save_path is :{}".format(pages, save_path))
-
-    #todo 更具stage 获得当前回的baseurl
-    base_url = 'http://jpgcdn.dmzx.com/img/00%2F58%2F358%2F2000016781%2F{}.jpg'
-    for i in range(1, pages):
-        page = str(i).zfill(4)
-
-        url = base_url.format(page)
-
-        response = requests.get(url)
-        image = Image.open(BytesIO(response.content))
-        target_dir = '{}/_{}'.format(save_path, stage)
-        if not os.path.exists(target_dir):
-            print('create dir, name is {}'.format(target_dir))
-            os.makedirs(target_dir)
-
-        image.save(os.path.join(target_dir, '{}.jpg'.format(page)))
-        print("{} save success".format(page))
-
-    print("end")
-    pass
+# todo 剧场版的被排除了
+def over(entity):
+    return int(get_number(entity.stage)) > 340
 
 
 if __name__ == '__main__':
-    download_image(341)
+
+    # 根据目录获取所有回合，及每个回合有的椰树
+    entities = stage_catch()
+
+    # 这里过滤了一下 只下载了340话以上的。
+    results = list(filter(over, entities))
+
+    # 遍历集合找出，每个回合对应的所有图片的集合
+    for entity in results:
+        img_urls = get_img_url_for_entity(entity.url)
+
+        #遍历图片集合，下载并保存到文件夹中。
+        for img in img_urls:
+            try:
+                download_image(entity.stage, img)
+            except:
+                print("第{}回，错误了".format(entity.stage))
+
