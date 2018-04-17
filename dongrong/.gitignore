@@ -1,0 +1,4 @@
+venv/
+outputs/
+config.py
+.idea/
